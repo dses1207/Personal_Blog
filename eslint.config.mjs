@@ -10,10 +10,12 @@ export default [
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  { plugins: ['tailwindcss'] },
   {
     rules: {
       'react/react-in-jsx-scope': 'off', // 關閉 JSX 需要 React 的規則
-      "react/prop-types": "off", //關閉 ESLint 的 react/prop-types 規則
+      'react/prop-types': 'off', //關閉 ESLint 的 react/prop-types 規則
+      'tailwindcss/classnames-order': 'off', // Respect prettier-plugin-tailwindcss order
     },
   },
   { ignores: ['.contentlayer/**/*'] },
