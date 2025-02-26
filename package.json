@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "origin_dev": "next dev --turbopack",
+    "dev": "contentlayer build & next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "eslintInit": "eslint --init",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "format:fix": "prettier --write './**/*.{css,scss,md,mdx,json}'",
-    "contentlayer:build": "contentlayer build"
+    "cbuild": "contentlayer build"
   },
   "dependencies": {
     "contentlayer": "^0.3.4",
