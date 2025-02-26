@@ -3,8 +3,10 @@ import { defineDocumentType, makeSource } from 'contentlayer/source-files';
 // 定義一個 Post 文件類型
 export const Post = defineDocumentType(() => ({
   name: 'Post',
-  filePathPattern: `content/posts/**/*.md`,
-  contentType: 'markdown',
+  // filePathPattern: `content/posts/**/*.md`,
+  // contentType: 'markdown',
+  filePathPattern: `content/posts/**/*.mdx`,
+  contentType: 'mdx',
   fields: {
     title: {
       type: 'string',
