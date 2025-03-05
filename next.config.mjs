@@ -3,6 +3,17 @@ import { withContentlayer } from 'next-contentlayer';
 /** @type {import('next').NextConfig} */
 const nextConfig = withContentlayer({
   reactStrictMode: true,
+  // swcMinify: true,
+  // Support svg import
+  // ref: https://dev.to/dolearning/importing-svgs-to-next-js-nna
+  webpack(config, { isServer }) {
+    // 配置處理 SVG 文件的 webpack loader
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ['@svgr/webpack'],
+    });
+    return config;
+  },
   eslint: {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
