@@ -25,20 +25,30 @@ if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     exit 1
 fi
 
-# 建立並切換到新分支
-echo "建立並切換到新分支：$BRANCH_NAME"
-git checkout -b "$BRANCH_NAME"
+# 檢查 branch 是否已存在
+if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+    echo "🔄 分支 '$BRANCH_NAME' 已存在，切換到該分支..."
+    git checkout "$BRANCH_NAME"
+else
+    echo "🚀 建立並切換到新分支：$BRANCH_NAME"
+    git checkout -b "$BRANCH_NAME"
+fi
 
 # 暫存所有變更
-echo "新增所有變更..."
+echo "📌 新增所有變更..."
 git add .
 
 # 提交變更
-read -p "請輸入 commit 訊息: " COMMIT_MSG
+read -p "📝 請輸入 commit 訊息: " COMMIT_MSG
 git commit -m "$COMMIT_MSG"
 
-# 推送新分支到遠端
-echo "推送新分支到 GitHub..."
-git push -u origin "$BRANCH_NAME"
+# 推送到遠端（如果是新分支，則設定 upstream）
+if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
+    echo "☁️ 分支已存在，直接推送變更..."
+    git push
+else
+    echo "☁️ 推送新分支到 GitHub..."
+    git push -u origin "$BRANCH_NAME"
+fi
 
-echo "✅ 專案已更新並推送到 GitHub 的新分支：$BRANCH_NAME"
+echo "✅ 專案已更新並推送到 GitHub 的分支：$BRANCH_NAME"

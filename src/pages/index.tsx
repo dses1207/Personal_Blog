@@ -1,5 +1,6 @@
 // 從 Contentlayer 自動生成的型別與資料中引入所有文章資料
-import { allPosts, Post } from '.contentlayer/generated';
+import { allPosts } from '.contentlayer/generated';
+import { GetStaticProps } from 'next';
 
 // 從 date-fns 套件引入 compareDesc 函數，用於比較兩個日期，並決定排序順序
 import { compareDesc } from 'date-fns';
@@ -7,30 +8,56 @@ import { compareDesc } from 'date-fns';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 //import Image from 'next/image';
-import ThemeSwitch from '@/components/ThemeSwitch';
+// import ThemeSwitch from '@/components/ThemeSwitch';
+import PostList, { PostForPostList } from '@/components/PostList';
 
 /**
  * getStaticProps 是 Next.js 提供的一個靜態生成（SSG）專用函數，
  * 這個函數會在編譯時被執行，用來取得頁面所需的資料，並將資料作為 props 傳遞給頁面元件。
  */
-export async function getStaticProps() {
-  // 將 allPosts 陣列依據日期進行排序，排序邏輯是：
-  // 使用 compareDesc 來比較每篇文章的 date 欄位（必須先轉換成 Date 物件）
-  // 若 a 的日期較晚，compareDesc 會回傳 -1，排序結果就是最新的文章排在最前面。
-  const posts = allPosts.sort((a, b) =>
+// export async function getStaticProps() {
+//   // 將 allPosts 陣列依據日期進行排序，排序邏輯是：
+//   // 使用 compareDesc 來比較每篇文章的 date 欄位（必須先轉換成 Date 物件）
+//   // 若 a 的日期較晚，compareDesc 會回傳 -1，排序結果就是最新的文章排在最前面。
+//   const posts = allPosts.sort((a, b) =>
+//     compareDesc(new Date(a.date), new Date(b.date))
+//   );
+
+//   // 將排序後的文章資料透過 props 傳遞給頁面元件
+//   return {
+//     props: {
+//       posts,
+//     },
+//   };
+// }
+
+// type Props = {
+//   posts: Post[];
+// };
+
+type PostForIndexPage = PostForPostList;
+
+type Props = {
+  posts: PostForIndexPage[];
+};
+
+export const getStaticProps: GetStaticProps<Props> = () => {
+  // 首先對 allPosts 陣列依據日期進行排序，從最新到最舊
+  const sortedPosts = allPosts.sort((a, b) =>
     compareDesc(new Date(a.date), new Date(b.date))
   );
 
-  // 將排序後的文章資料透過 props 傳遞給頁面元件
-  return {
-    props: {
-      posts,
-    },
-  };
-}
+  // 接著把排序後的陣列 map 成只包含必要欄位的資料物件
+  const posts = sortedPosts.map((post) => ({
+    slug: post.slug,
+    date: post.date,
+    title: post.title,
+    description: post.description,
+    path: post.path,
+  })) as PostForIndexPage[];
 
-type Props = {
-  posts: Post[];
+  // 將整理好的 posts 透過 props 傳遞給頁面元件
+  return { props: { posts } };
 };
 
 const Home: NextPage<Props> = ({ posts }) => {
@@ -42,26 +69,21 @@ const Home: NextPage<Props> = ({ posts }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="bg-white p-4 text-black dark:bg-black dark:text-white">
-        <h1 className="mb-6 text-4xl font-bold">Welcome to my blog!</h1>
+      <div className="prose my-12 space-y-2 transition-colors dark:prose-dark md:prose-lg md:space-y-5">
+        <h1 className="tre ext-center sm:text-left">
+          Greetings, I'm Roy.
+        </h1>
+        <p>開發日誌，全端、AI和APP</p>
+        <p>純紀錄，也期望內容會對你有所幫助</p>
+        <p>祝你有美好的一天 : )</p>
+      </div>
+      <div className="my-4 divide-y divide-gray-200 transition-colors dark:divide-gray-700">
+        <div className="prose prose-lg my-8 dark:prose-dark">
+          <h2>最新文章</h2>
+        </div>
 
-        <div className="my-4">
-          <ThemeSwitch />
-        </div>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {posts.map((post) => (
-            <div
-              key={post.slug}
-              className="rounded-lg border border-black p-6 dark:border-white"
-            >
-              <a href={post.path}>
-                <h2 className="mb-4 text-2xl font-semibold">{post.title}</h2>
-                <p>{post.description}</p>
-              </a>
-            </div>
-          ))}
-        </div>
-      </main>
+        <PostList posts={posts} />
+      </div>
     </div>
   );
 };
