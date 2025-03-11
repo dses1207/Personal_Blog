@@ -7,6 +7,10 @@
     @apply rounded-tl-none rounded-tr-none;
   }
 
+  div:global(.rehype-code-title) + pre {
+    @apply rounded-tl-none rounded-tr-none;
+  }
+
   img {
     @apply ml-auto mr-auto;
   }

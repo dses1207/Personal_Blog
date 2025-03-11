@@ -1,4 +1,6 @@
 import { defineDocumentType, makeSource } from 'contentlayer/source-files';
+import rehypePrism from 'rehype-prism-plus';
+import rehypeCodeTitles from 'rehype-code-titles';
 
 // 定義一個 Post 文件類型
 export const Post = defineDocumentType(() => ({
@@ -37,4 +39,7 @@ export const Post = defineDocumentType(() => ({
 export default makeSource({
   contentDirPath: 'content', // 內容檔案放置的資料夾
   documentTypes: [Post],
+  mdx: {
+    rehypePlugins: [rehypeCodeTitles, [rehypePrism, { ignoreMissing: true }]],
+  },
 });

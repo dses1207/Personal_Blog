@@ -12,6 +12,8 @@ import PostLayout, {
   RelatedPostForPostLayout,
 } from '@/components/PostLayout';
 
+import mdxComponents from '@/lib/mdxComponents';
+
 type PostForPostPage = PostForPostLayout & {
   title: string;
   description: string;
@@ -108,7 +110,7 @@ const PostPage: NextPage<Props> = ({ post, prevPost, nextPost }) => {
         </time> */}
       <PostLayout post={post} prevPost={prevPost} nextPost={nextPost}>
         {/* <div dangerouslySetInnerHTML={{ __html: post.body.html }} /> */}
-        <MDXContent />
+        <MDXContent components={mdxComponents} />
       </PostLayout>
     </>
   );
