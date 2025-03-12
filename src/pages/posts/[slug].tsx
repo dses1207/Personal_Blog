@@ -1,6 +1,6 @@
 // import { format, parseISO } from 'date-fns';
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import Head from 'next/head';
+import { ArticleJsonLd, NextSeo } from 'next-seo';
 
 import { compareDesc } from 'date-fns';
 import { useMDXComponent } from 'next-contentlayer/hooks';
@@ -14,9 +14,15 @@ import PostLayout, {
 
 import mdxComponents from '@/lib/mdxComponents';
 
+import { siteConfigs } from '@/configs/siteConfigs';
+import { getPostOGImage } from '@/lib/getPostOGImage';
+
 type PostForPostPage = PostForPostLayout & {
   title: string;
   description: string;
+  date: string;
+  path: string;
+  socialImage: string | null;
   body: {
     code: string;
   };
@@ -62,6 +68,8 @@ export const getStaticProps: GetStaticProps<Props> = ({ params }) => {
     title: postFull.title,
     date: postFull.date,
     description: postFull.description,
+    path: postFull.path,
+    socialImage: postFull.socialImage || null,
     body: {
       code: postFull.body.code,
     },
@@ -84,32 +92,50 @@ const PostPage: NextPage<Props> = ({ post, prevPost, nextPost }) => {
   const {
     description,
     title,
+    date,
+    path,
+    socialImage,
     body: { code },
   } = post;
 
-  // const PostPage: NextPage<Props> = ({ post }) => {
-  //   // console.log('原始 HTML:', post.body.html);
-  //   // console.log('解碼後 HTML:', decodeURIComponent(post.body.html));
-  //   const MDXContent = useMDXComponent(post.body.code);
-
+  const url = siteConfigs.fqdn + path;
+  const ogImage = getPostOGImage(socialImage);
   const MDXContent = useMDXComponent(code);
 
   return (
     <>
-      <Head>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <NextSeo
+        title={title}
+        description={description}
+        canonical={url}
+        openGraph={{
+          title: title,
+          description: description,
+          url: url,
+          images: [
+            {
+              url: ogImage,
+            },
+          ],
+          type: 'article',
+          article: {
+            publishedTime: date,
+            modifiedTime: date,
+          },
+        }}
+      />
 
-      {/* <main>
-        <h1>{post.title}</h1>
+      <ArticleJsonLd
+        url={url}
+        title={title}
+        images={[ogImage]}
+        datePublished={date}
+        dateModified={date}
+        authorName={siteConfigs.author}
+        description={description}
+      />
 
-        <time dateTime={post.date}>
-          {format(parseISO(post.date), 'LLLL d, yyyy')}
-        </time> */}
       <PostLayout post={post} prevPost={prevPost} nextPost={nextPost}>
-        {/* <div dangerouslySetInnerHTML={{ __html: post.body.html }} /> */}
         <MDXContent components={mdxComponents} />
       </PostLayout>
     </>

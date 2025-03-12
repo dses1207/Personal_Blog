@@ -6,34 +6,12 @@ import { GetStaticProps } from 'next';
 import { compareDesc } from 'date-fns';
 
 import type { NextPage } from 'next';
-import Head from 'next/head';
-//import Image from 'next/image';
-// import ThemeSwitch from '@/components/ThemeSwitch';
+import { ArticleJsonLd } from 'next-seo';
+
 import PostList, { PostForPostList } from '@/components/PostList';
+import { siteConfigs } from '@/configs/siteConfigs';
 
-/**
- * getStaticProps 是 Next.js 提供的一個靜態生成（SSG）專用函數，
- * 這個函數會在編譯時被執行，用來取得頁面所需的資料，並將資料作為 props 傳遞給頁面元件。
- */
-// export async function getStaticProps() {
-//   // 將 allPosts 陣列依據日期進行排序，排序邏輯是：
-//   // 使用 compareDesc 來比較每篇文章的 date 欄位（必須先轉換成 Date 物件）
-//   // 若 a 的日期較晚，compareDesc 會回傳 -1，排序結果就是最新的文章排在最前面。
-//   const posts = allPosts.sort((a, b) =>
-//     compareDesc(new Date(a.date), new Date(b.date))
-//   );
-
-//   // 將排序後的文章資料透過 props 傳遞給頁面元件
-//   return {
-//     props: {
-//       posts,
-//     },
-//   };
-// }
-
-// type Props = {
-//   posts: Post[];
-// };
+import generateRSS from '@/lib/generateRSS';
 
 type PostForIndexPage = PostForPostList;
 
@@ -56,23 +34,27 @@ export const getStaticProps: GetStaticProps<Props> = () => {
     path: post.path,
   })) as PostForIndexPage[];
 
+  generateRSS();
+
   // 將整理好的 posts 透過 props 傳遞給頁面元件
   return { props: { posts } };
 };
 
 const Home: NextPage<Props> = ({ posts }) => {
   return (
-    <div>
-      <Head>
-        <title>My blog</title>
-        <meta name="description" content="Welcome to Roy's blog" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <>
+      <ArticleJsonLd
+        type="Blog"
+        url={siteConfigs.fqdn}
+        title={siteConfigs.title}
+        images={[siteConfigs.bannerUrl]}
+        datePublished={siteConfigs.datePublished}
+        authorName={siteConfigs.author}
+        description={siteConfigs.description}
+      />
 
       <div className="prose my-12 space-y-2 transition-colors dark:prose-dark md:prose-lg md:space-y-5">
-        <h1 className="tre ext-center sm:text-left">
-          Greetings, I'm Roy.
-        </h1>
+        <h1 className="tre ext-center sm:text-left">Greetings, I'm Roy Li.</h1>
         <p>開發日誌，全端、AI和APP</p>
         <p>純紀錄，也期望內容會對你有所幫助</p>
         <p>祝你有美好的一天 : )</p>
@@ -84,7 +66,7 @@ const Home: NextPage<Props> = ({ posts }) => {
 
         <PostList posts={posts} />
       </div>
-    </div>
+    </>
   );
 };
 
