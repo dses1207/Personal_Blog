@@ -26,6 +26,9 @@ export const Post = defineDocumentType(() => ({
       type: 'date',
       required: true,
     },
+    socialImage: {
+      type: 'string',
+    },
   },
   computedFields: {
     path: {

@@ -18,5 +18,14 @@ export default [
       'tailwindcss/classnames-order': 'off', // Respect prettier-plugin-tailwindcss order
     },
   },
-  { ignores: ['.contentlayer/**/*'] },
+  {
+    ignores: [
+      '.contentlayer/**/*',
+      '/public/robots.txt',
+      '/public/sitemap*.xml',
+      '/public/atom.xml',
+      '/public/feed.xml',
+      '/public/feed.json',
+    ],
+  },
 ];
