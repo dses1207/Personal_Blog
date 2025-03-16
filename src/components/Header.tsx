@@ -1,4 +1,4 @@
-import CustomLink from '@/components/CustomLink';
+import CustomLink from '@/components/CustomLink/CustomLink';
 import MobileNav from '@/components/MobileNav';
 import SectionContainer from '@/components/SectionContainer';
 import ThemeSwitch from '@/components/ThemeSwitch';
