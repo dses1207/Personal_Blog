@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import CustomLink from '@/components/CustomLink';
+import CustomLink from '@/components/CustomLink/CustomLink';
 import PageTitle from '@/components/PageTitle';
 import PostBody from '@/components/PostBody';
 import formatDate from '@/lib/formatDate';
