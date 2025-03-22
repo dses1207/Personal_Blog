@@ -1,27 +1,27 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+node_modules/
+.pnp
+.pnp.js
+.yarn/
 
 # testing
 /coverage
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build/
+dist/
 
 # misc
 .DS_Store
+Thumbs.db
+desktop.ini
+.directory
 *.pem
 
 # debug
@@ -29,23 +29,37 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+logs/
+*.log
 
 # env files (can opt-in for committing if needed)
-.env*
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
 
 # vercel
 .vercel
 
 # typescript
-*.tsbuildinfo
+tsconfig.tsbuildinfo
 next-env.d.ts
 
 # Contentlayer
 .contentlayer
+.mdx-data/
 
 others
 
-.vscode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.sublime-project
+*.sublime-workspace
 
 /public/robots.txt
 /public/sitemap*.xml
@@ -53,3 +67,50 @@ others
 /public/atom.xml
 /public/feed.xml
 /public/feed.json
+
+# 內容檔案 - 只保留特定文章
+/content/posts/*
+!/content/posts/.gitkeep
+!/content/posts/20250220-*.mdx
+!/content/posts/20250312-*.mdx
+
+# 限制保留的檔案數量
+# 只保留2篇2月20日的文章和1篇3月12日的文章
+# 排除所有其他文章，包括將來添加的
+/content/posts/202[0-4]*-*.mdx
+/content/posts/20250[0-1]*-*.mdx
+/content/posts/2025022[1-9]*-*.mdx
+/content/posts/202502[3-9]*-*.mdx
+/content/posts/20250[3-9][^1][^2]*-*.mdx
+/content/posts/2025031[^2]*-*.mdx
+/content/posts/202503[2-9]*-*.mdx
+/content/posts/20250[4-9]*-*.mdx
+/content/posts/2025[1-9]*-*.mdx
+/content/posts/202[6-9]*-*.mdx
+/content/posts/20[3-9]*-*.mdx
+/content/posts/2[1-9]*-*.mdx
+/content/posts/[3-9]*-*.mdx
+
+# 圖片檔案 - 根據需要保留與上述文章相關的圖片
+/public/images/posts/*
+!/public/images/posts/.gitkeep
+!/public/images/posts/20250220-*.*
+!/public/images/posts/20250312-*.*
+
+# 保持其他忽略部分不變...
+
+# 暫存檔案
+.cache/
+.temp/
+*.swp
+*.swo
+*~
+
+# 身份驗證相關
+.htpasswd
+.htaccess
+
+# 備份檔案
+*.bak
+*.backup
+*copy*
