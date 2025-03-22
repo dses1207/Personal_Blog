@@ -1,12 +1,12 @@
 const fqdn = 'https://royli-personal-blog.vercel.app';
-const logoPath = '/logo.png';
+const logoPath = '/ai.jpg';
 const bannerPath = '/cp.jpg';
 
 export const siteConfigs = {
-  title: "Roy's Blog with ...",
+  title: "Roy's Blog with AI, Full Stack and Linux technique",
   titleShort: "Roy's Blog",
   description:
-    'Blog starter template with modern frontend technologies like Next.js, Tailwind CSS, Contentlayer, i18Next',
+    'AI、全端網頁開發、APP開發日誌和技術分享，也許能在這找到你Bug的解答',
   author: 'Roy Li',
   fqdn: fqdn,
   logoPath: logoPath,

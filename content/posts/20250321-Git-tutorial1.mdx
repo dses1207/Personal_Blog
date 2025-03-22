@@ -1,0 +1,200 @@
+---
+title: Git 客戶端操作手冊（最新版）
+description: 本篇教學適用於團隊在內部網路（local server）共享 Git 倉庫（bare repository）的情境。將說明如何透過 Git Bash 或 CMD 進行 clone、commit、push、pull 與 branch 操作，並搭配 Git 最新版本（含 `main` 預設分支）進行講解。
+slug: Git-Tutorial
+date: 2025-03-21
+type: Post
+---
+
+> 📌 **前提需求**：
+>
+> - 已安裝 [Git for Windows](https://git-scm.com/download/win)
+> - 使用 Windows 系統，並可存取內部共享路徑（如 `\cmz30ait02\pygit`）
+
+---
+
+## 一、建立遠端裸倉庫（bare repository）
+
+Bare repository 是純儲存 Git 專案版本的儲存庫，不含工作目錄，適合作為團隊的共享中心。
+
+### 1. 建立儲存目錄()
+
+```bash
+cd \\company_local_server\git_repo
+mkdir your_project.git
+cd your_project.git
+```
+
+> '\\company_local_server\git_repo' 需替換成使用者的公司內網
+
+### 2. 初始化裸倉庫
+
+```bash
+git init --bare
+```
+
+完成後會看到如下結構：
+
+```plaintext
+your_project.git/
+├── HEAD
+├── config
+├── refs/
+├── objects/
+├── hooks/
+└── ...
+```
+
+---
+
+## 二、連接遠端 Repo
+
+### 情況一：使用現有專案進行 clone
+
+```bash
+cd D:/myproject
+# 注意 file: 後需四個斜線 //
+git clone "file:////cmz30ait02/pygit/your_project.git"
+```
+
+完成後會取得本地版本，預設分支為 `main`（若遠端 HEAD 指向的是 `main`）。
+
+### 情況二：建立新專案並連結遠端 repo
+
+```bash
+cd D:/myproject
+mkdir myproject && cd myproject
+git init
+git remote add origin "file:////cmz30ait02/pygit/your_project.git"
+```
+
+> 此方式適用於從零開始新專案，再 push 上遠端。
+
+---
+
+## 三、日常 Git 操作
+
+### 1. 查看目前狀態
+
+```bash
+git status
+```
+
+### 2. 新增或修改檔案
+
+```bash
+git add .
+```
+
+將所有變更加入 staging area。
+
+### 3. 提交 commit
+
+```bash
+git commit -m "你的提交訊息"
+```
+
+### 4. 推送到遠端
+
+```bash
+git push origin main
+```
+
+> 若使用其他分支，請將 `main` 改為分支名稱。
+
+### 5. 從遠端拉取更新
+
+```bash
+git pull origin main
+```
+
+---
+
+## 四、分支（Branch）管理
+
+主線（main/master）為穩定版，功能開發建議建立分支進行。
+
+### 1. 建立並切換新分支
+
+```bash
+git checkout -b feature-branch
+```
+
+### 2. 提交並推送分支
+
+```bash
+git add .
+git commit -m "開發新功能"
+git push origin feature-branch
+```
+
+### 3. 查看所有分支
+
+```bash
+git branch -a
+```
+
+### 4. 切換回主分支
+
+```bash
+git checkout main
+```
+
+### 5. 刪除本地與遠端分支
+
+```bash
+git branch -d feature-branch        # 本地刪除
+git push origin --delete feature-branch  # 遠端刪除
+```
+
+---
+
+## 五、版本回復（使用舊版本內容）
+
+### 1. 查看歷史紀錄
+
+```bash
+git log --oneline
+```
+
+取得版本 commit hash（如：`abc123`）
+
+### 2. 將某個版本內容取出到工作目錄
+
+```bash
+git checkout abc123 -- .
+```
+
+此操作僅還原工作目錄內容，不會移動 HEAD。
+
+### 3. 提交為新版本
+
+```bash
+git add .
+git commit -m "回復 abc123 的內容"
+```
+
+### 4. 推送至遠端
+
+```bash
+git push origin main
+```
+
+---
+
+## 六、問題排解
+
+### 無法 clone 或 push：權限錯誤
+
+- 確認你有權限存取 `\\cmz30ait02\pygit`
+- 嘗試在檔案總管貼上路徑測試連線
+
+### push 被拒絕（rejected）
+
+- 先 pull 最新版本再 push
+
+```bash
+git pull origin main
+```
+
+---
