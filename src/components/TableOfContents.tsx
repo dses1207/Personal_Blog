@@ -83,7 +83,7 @@ const TableOfContents = ({ source }: Props) => {
       <p className="mb-5 text-lg font-semibold text-gray-900 transition-colors dark:text-gray-100">
         目錄
       </p>
-      <div className="flex flex-col items-start justify-start">
+      <div className="flex flex-col items-start justify-start max-h-[60vh] overflow-y-auto pr-2">
         {headings.map((heading, index) => {
           return (
             <button
@@ -94,11 +94,11 @@ const TableOfContents = ({ source }: Props) => {
                   ? 'font-medium text-primary-500 hover:text-primary-600 dark:hover:text-primary-400'
                   : 'font-normal text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200',
                 heading.level === 3 && 'pl-4',
-                'mb-3 text-left text-sm transition-colors hover:underline'
+                'mb-3 text-left text-sm transition-colors hover:underline w-full'
               )}
               onClick={(e) => {
                 e.preventDefault();
-                document.querySelector(`#${heading.id}`)?.scrollIntoView({
+                document.querySelector(`#${CSS.escape(heading.id)}`)?.scrollIntoView({
                   behavior: 'smooth',
                   block: 'start',
                   inline: 'nearest',
